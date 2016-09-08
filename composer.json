@@ -1,0 +1,14 @@
+{
+    "name": "buri/resource-controller",
+    "description": "Package providing basic CRUD functionality based on config",
+    "authors": [
+        {
+            "name": "Jakub Buriánek",
+            "email": "buri@buri.be"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "nette/nette": ">=2.3"
+    }
+}
