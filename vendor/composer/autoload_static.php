@@ -13,6 +13,20 @@ class ComposerStaticInited759af26df50ca797ba0913df77569c
         '5c07e51810209209735cf7390eb0937b' => __DIR__ . '/..' . '/nette/deprecated/src/loader.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'B' => 
+        array (
+            'Buri\\Resource\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Buri\\Resource\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+    );
+
     public static $classMap = array (
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
@@ -361,6 +375,8 @@ class ComposerStaticInited759af26df50ca797ba0913df77569c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInited759af26df50ca797ba0913df77569c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInited759af26df50ca797ba0913df77569c::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInited759af26df50ca797ba0913df77569c::$classMap;
 
         }, null, ClassLoader::class);

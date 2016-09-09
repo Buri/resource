@@ -1,15 +1,18 @@
+# Original settings from default app
 parameters:
-
-
 application:
 	errorPresenter: Error
 	mapping:
 		*: App\*Module\Presenters\*Presenter
-
-
 session:
 	expiration: 14 days
-
-
 services:
 	router: App\RouterFactory::createRouter
+
+# Resource configuration
+extensions:
+    resource: Buri\Resource\Extension\ResourceExtension
+resource:
+    definitions:
+        default-resource:
+            table: some_table
