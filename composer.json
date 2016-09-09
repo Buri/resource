@@ -1,5 +1,5 @@
 {
-    "name": "buri/resource-controller",
+    "name": "buri/resource",
     "description": "Package providing basic CRUD functionality based on config",
     "authors": [
         {
