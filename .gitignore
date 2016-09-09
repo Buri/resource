@@ -1,3 +1,3 @@
 /vendor/
 /tests/www-test/vendor
-.idea
+#.idea
