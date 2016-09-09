@@ -1,6 +1,7 @@
 {
     "name": "buri/resource",
     "description": "Package providing basic CRUD functionality based on config",
+    "license": "GPL-3.0",
     "authors": [
         {
             "name": "Jakub Buriánek",
