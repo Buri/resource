@@ -40,7 +40,7 @@ class ResourceExtension extends CompilerExtension
 
     private function getNormalizedConfig()
     {
-        $config = $this->getConfig($this->defaults);;
+        $config = $this->getConfig($this->defaults);
         foreach ($config['definitions'] as $resource => $configuration) {
             $config['definitions'][$resource] = array_merge($this->defaultResource, $configuration);
         }
