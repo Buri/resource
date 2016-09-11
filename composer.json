@@ -1,6 +1,13 @@
 {
     "name": "buri/resource",
-    "description": "Package providing basic CRUD functionality based on config",
+    "description": "Package providing basic CRUD functionality based on configuration. Indirect port of SyliusResourceBundle into Nette.",
+    "keywords": [
+        "mvc",
+        "resource",
+        "storage",
+        "persistence",
+        "crud"
+    ],
     "license": "GPL-3.0",
     "authors": [
         {
@@ -13,6 +20,8 @@
         "nette/nette": ">=2.3"
     },
     "autoload": {
-        "psr-4": {"Buri\\Resource\\": "src/"}
+        "psr-4": {
+            "Buri\\Resource\\": "src/"
+        }
     }
 }
