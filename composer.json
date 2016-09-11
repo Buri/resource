@@ -21,7 +21,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Buri\\Resource\\": "src/"
+            "Buri\\Resource\\": "src/",
+            "Buri\\Resource\\Unit\\": "tests/Unit/"
         }
+    },
+    "require-dev": {
+        "nette/tester": "^1.7"
     }
 }
