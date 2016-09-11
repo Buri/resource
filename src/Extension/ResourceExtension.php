@@ -13,11 +13,13 @@ class ResourceExtension extends CompilerExtension
 {
 	public $defaults = [
 		'driver' => 'nettedb',
+		'defaults' => [
+			'presenter' => ResourcePresenter::class,
+//			'views' => [
+//				'default' => '',
+//			],
+		],
 		'definitions' => [],
-	];
-
-	public $defaultResource = [
-		'presenter' => ResourcePresenter::class,
 	];
 
 	public function loadConfiguration()
@@ -46,7 +48,7 @@ class ResourceExtension extends CompilerExtension
 	{
 		$config = $this->getConfig($this->defaults);
 		foreach ($config['definitions'] as $resource => $configuration) {
-			$config['definitions'][$resource] = array_merge($this->defaultResource, $configuration);
+			$config['definitions'][$resource] = array_merge($config['defaults'], $configuration);
 		}
 
 		return $config;

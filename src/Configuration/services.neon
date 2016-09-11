@@ -1,7 +1,3 @@
-routerFactory:
-    class: Buri\Resource\Routing\ResourceRouterFactory
-    setup:
-        - setStorage
 presenter:
     class: Buri\Resource\Presenter\ResourcePresenter
     tags:
