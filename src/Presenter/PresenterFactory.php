@@ -2,24 +2,37 @@
 
 namespace Buri\Resource\Presenter;
 
+use Buri\Resource\Configuration\RequestConfiguration;
 use Nette\Application\PresenterFactory as BasePresenterFactory;
 
 class PresenterFactory extends BasePresenterFactory
 {
-	/** @var  array */
-	protected $resourcesConfiguration;
+	/** @var  RequestConfiguration */
+	protected $requestConfiguration;
 
 	/**
-	 * @param array $resourcesConfiguration
+	 * @param RequestConfiguration $requestConfiguration
 	 */
-	public function setResourcesConfiguration(array $resourcesConfiguration)
+	public function setRequestConfiguration(RequestConfiguration $requestConfiguration)
 	{
-		$this->resourcesConfiguration = $resourcesConfiguration;
+		$this->requestConfiguration = $requestConfiguration;
 	}
+
+	public function createPresenter($name)
+	{
+		$presenter = parent::createPresenter($name);
+
+		if ($presenter instanceof ResourcePresenter) {
+			$presenter->setRequestConfiguration($this->requestConfiguration);
+		}
+
+		return $presenter;
+	}
+
 
 	public function getPresenterClass(& $name)
 	{
-		foreach ($this->resourcesConfiguration['definitions'] as $resource => $configuration) {
+		foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
 			$normalizedResourceName = $this->resourceToPresenter($resource);
 			if ($normalizedResourceName === $name) {
 				return $configuration['presenter'];

@@ -2,6 +2,7 @@
 
 namespace Buri\Resource\Extension;
 
+use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
 use Nette\Bridges\ApplicationDI\PresenterFactoryCallback;
@@ -15,6 +16,11 @@ class ResourceExtension extends CompilerExtension
 		'driver' => 'nettedb',
 		'defaults' => [
 			'presenter' => ResourcePresenter::class,
+			'actions' => [
+				'default' => [
+					'secure' => true,
+				]
+			]
 //			'views' => [
 //				'default' => '',
 //			],
@@ -34,6 +40,10 @@ class ResourceExtension extends CompilerExtension
 			$this->name
 		);
 
+
+		$builder->addDefinition($this->prefix('requestConfiguration'))
+			->setClass(RequestConfiguration::class, [$config]);
+
 		// Modify presenter factory to look for defined resource
 		$presenterFactory = $builder->getDefinition('application.presenterFactory');
 		$presenterFactory
@@ -41,7 +51,7 @@ class ResourceExtension extends CompilerExtension
 			->setFactory(PresenterFactory::class, [new Statement(
 				PresenterFactoryCallback::class, $presenterFactory->getFactory()->arguments[0]->arguments
 			)])
-			->addSetup('setResourcesConfiguration', [$config]);
+			->addSetup('setRequestConfiguration', [$this->prefix('@requestConfiguration')]);
 	}
 
 	private function getNormalizedConfig()

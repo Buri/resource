@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
 use Nette\Application\InvalidPresenterException;
@@ -16,7 +17,7 @@ class PresenterFactoryTest extends Tester\TestCase
 	public function setUp()
 	{
 		$this->presenterFactory = new PresenterFactory();
-		$this->presenterFactory->setResourcesConfiguration(ConfigurationTestData::getConfiguration());
+		$this->presenterFactory->setRequestConfiguration(new RequestConfiguration(ConfigurationTestData::getConfiguration()));
 	}
 
 	public function tearDown()
