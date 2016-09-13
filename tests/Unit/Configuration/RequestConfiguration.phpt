@@ -16,6 +16,7 @@ class RequestConfigurationTest extends Tester\TestCase
 	public function setUp()
 	{
 		$this->requestConfiguration = new RequestConfiguration(ConfigurationTestData::getConfiguration());
+		$this->requestConfiguration->setCurrentConfiguration('customised', 'Customised');
 	}
 
 	public function tearDown()
@@ -38,7 +39,7 @@ class RequestConfigurationTest extends Tester\TestCase
 	/**
 	 * @dataProvider getFunctionNames
 	 */
-	public function testGetPresenterClassUnknown()
+	public function testFunctionAfterInitialization()
 	{
 		$this->requestConfiguration->handleRequest(new Request('Customised'));
 		$arguments = func_get_args();

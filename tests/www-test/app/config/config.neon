@@ -16,3 +16,6 @@ resource:
     definitions:
         default-resource:
             table: some_table
+            actions:
+                default:
+                    secure: false

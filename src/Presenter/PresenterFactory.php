@@ -10,6 +10,9 @@ class PresenterFactory extends BasePresenterFactory
 	/** @var  RequestConfiguration */
 	protected $requestConfiguration;
 
+	/** @var string[] */
+	protected $presenterToResourceMap = [];
+
 	/**
 	 * @param RequestConfiguration $requestConfiguration
 	 */
@@ -23,6 +26,17 @@ class PresenterFactory extends BasePresenterFactory
 		$presenter = parent::createPresenter($name);
 
 		if ($presenter instanceof ResourcePresenter) {
+			if (isset($this->presenterToResourceMap[$name])) {
+				$this->requestConfiguration->setCurrentConfiguration($this->presenterToResourceMap[$name], $name);
+			} else {
+				foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
+					$normalizedResourceName = $this->resourceToPresenter($resource);
+					$this->presenterToResourceMap[$normalizedResourceName] = $resource;
+					if ($normalizedResourceName === $name) {
+						$this->requestConfiguration->setCurrentConfiguration($resource, $name);
+					}
+				}
+			}
 			$presenter->setRequestConfiguration($this->requestConfiguration);
 		}
 
@@ -34,6 +48,7 @@ class PresenterFactory extends BasePresenterFactory
 	{
 		foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
 			$normalizedResourceName = $this->resourceToPresenter($resource);
+			$this->presenterToResourceMap[$normalizedResourceName] = $resource;
 			if ($normalizedResourceName === $name) {
 				return $configuration['presenter'];
 			}

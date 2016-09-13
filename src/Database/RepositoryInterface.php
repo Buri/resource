@@ -5,7 +5,7 @@ namespace Buri\Resource\Database;
 
 interface RepositoryInterface
 {
-	public function find($id);
+	public function find($objectId);
 	public function findAll();
 
 	public function createPager();

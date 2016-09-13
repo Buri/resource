@@ -15,15 +15,18 @@ class ResourceExtension extends CompilerExtension
 	public $defaults = [
 		'driver' => 'nettedb',
 		'defaults' => [
+			'table' => null,
 			'presenter' => ResourcePresenter::class,
 			'actions' => [
 				'default' => [
 					'secure' => true,
-				]
-			]
-//			'views' => [
-//				'default' => '',
-//			],
+					'paginate' => true,
+					'sortable' => true,
+					'sort' => [
+						'id' => 'desc',
+					],
+				],
+			],
 		],
 		'definitions' => [],
 	];
@@ -39,7 +42,6 @@ class ResourceExtension extends CompilerExtension
 			$this->loadFromFile(__DIR__ . '/../Configuration/services.neon'),
 			$this->name
 		);
-
 
 		$builder->addDefinition($this->prefix('requestConfiguration'))
 			->setClass(RequestConfiguration::class, [$config]);
@@ -58,7 +60,7 @@ class ResourceExtension extends CompilerExtension
 	{
 		$config = $this->getConfig($this->defaults);
 		foreach ($config['definitions'] as $resource => $configuration) {
-			$config['definitions'][$resource] = array_merge($config['defaults'], $configuration);
+			$config['definitions'][$resource] = array_replace_recursive($config['defaults'], $configuration);
 		}
 
 		return $config;
