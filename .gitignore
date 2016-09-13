@@ -1,3 +1,4 @@
 /vendor/
 /tests/www-test/vendor
 composer.lock
+tests/coverage.xml
