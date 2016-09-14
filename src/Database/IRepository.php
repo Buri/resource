@@ -3,7 +3,7 @@
 namespace Buri\Resource\Database;
 
 
-interface RepositoryInterface
+interface IRepository
 {
 	public function find($objectId);
 	public function findAll();

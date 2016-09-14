@@ -15,9 +15,31 @@ abstract class ConfigurationTestData
 			'definitions' => [
 				'some-resource' => [
 					'presenter' => ResourcePresenter::class,
+					'actions' => [
+						'default' => [
+							'secure' => true,
+							'paginate' => true,
+							'pageSize' => 20,
+							'sortable' => true,
+							'sort' => [
+								'id' => 'desc',
+							],
+						],
+					],
 				],
 				'customised' => [
 					'presenter' => ResourcePresenter::class,
+					'actions' => [
+						'default' => [
+							'secure' => true,
+							'paginate' => true,
+							'pageSize' => 20,
+							'sortable' => true,
+							'sort' => [
+								'id' => 'desc',
+							],
+						],
+					],
 				],
 			],
 		];

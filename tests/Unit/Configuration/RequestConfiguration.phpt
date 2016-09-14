@@ -32,7 +32,7 @@ class RequestConfigurationTest extends Tester\TestCase
 		$arguments = func_get_args();
 		$functionName = array_shift($arguments);
 		Assert::exception(function () use ($functionName, $arguments) {
-			$this->requestConfiguration->{$functionName}($arguments);
+			call_user_func_array([$this->requestConfiguration, $functionName], $arguments);
 		}, ResourceNotInitializedException::class);
 	}
 
@@ -44,13 +44,13 @@ class RequestConfigurationTest extends Tester\TestCase
 		$this->requestConfiguration->handleRequest(new Request('Customised'));
 		$arguments = func_get_args();
 		$functionName = array_shift($arguments);
-		$this->requestConfiguration->{$functionName}($arguments);
+		call_user_func_array([$this->requestConfiguration, $functionName], $arguments);
 	}
 
 	public function getFunctionNames()
 	{
 		return [
-			['isActionSecured'],
+			['isActionSecured', 'default'],
 		];
 	}
 }

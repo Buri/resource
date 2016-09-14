@@ -23,6 +23,9 @@ class RequestConfiguration
 	/** @var string */
 	protected $normalizedName;
 
+	/** @var string */
+	protected $resourceName;
+
 	/**
 	 * @var bool Has configuration handled request already?
 	 */
@@ -65,6 +68,7 @@ class RequestConfiguration
 		}
 		$this->currentConfiguration = $this->configuration['definitions'][$currentConfiguration];
 		$this->normalizedName = $normalizedName === null ? $currentConfiguration : $normalizedName;
+		$this->resourceName = $currentConfiguration;
 	}
 
 	public function getConfigurationForResource($resource)
@@ -84,9 +88,48 @@ class RequestConfiguration
 		return $this->configuration;
 	}
 
-	public function isActionSecured()
+	/**
+	 * @return string
+	 */
+	public function getNormalizedName()
+	{
+		return $this->normalizedName;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResourceName()
+	{
+		return $this->resourceName;
+	}
+
+	/**
+	 * @param $action
+	 * @return bool
+	 */
+	public function isActionSecured($action)
+	{
+		return $this->action($action)['secure'];
+	}
+
+	public function isPageable($action)
+	{
+		return $this->action($action)['paginate'];
+	}
+
+	/**
+	 * @param $name
+	 * @return array
+	 */
+	protected function action($name)
 	{
 		$this->assertInitialized();
+		if (isset($this->currentConfiguration['actions'][$name])) {
+			return $this->currentConfiguration['actions'][$name];
+		}
+
+		return [];
 	}
 
 	protected function assertInitialized()
