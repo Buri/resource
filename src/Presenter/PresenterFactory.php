@@ -19,6 +19,7 @@ class PresenterFactory extends BasePresenterFactory
 	public function setRequestConfiguration(RequestConfiguration $requestConfiguration)
 	{
 		$this->requestConfiguration = $requestConfiguration;
+		$this->warmupResourceMap();
 	}
 
 	public function createPresenter($name)
@@ -28,14 +29,6 @@ class PresenterFactory extends BasePresenterFactory
 		if ($presenter instanceof ResourcePresenter) {
 			if (isset($this->presenterToResourceMap[$name])) {
 				$this->requestConfiguration->setCurrentConfiguration($this->presenterToResourceMap[$name], $name);
-			} else {
-				foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
-					$normalizedResourceName = $this->resourceToPresenter($resource);
-					$this->presenterToResourceMap[$normalizedResourceName] = $resource;
-					if ($normalizedResourceName === $name) {
-						$this->requestConfiguration->setCurrentConfiguration($resource, $name);
-					}
-				}
 			}
 			$presenter->setRequestConfiguration($this->requestConfiguration);
 		}
@@ -46,15 +39,21 @@ class PresenterFactory extends BasePresenterFactory
 
 	public function getPresenterClass(& $name)
 	{
-		foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
-			$normalizedResourceName = $this->resourceToPresenter($resource);
-			$this->presenterToResourceMap[$normalizedResourceName] = $resource;
-			if ($normalizedResourceName === $name) {
-				return $configuration['presenter'];
-			}
+		if (isset($this->presenterToResourceMap[$name])) {
+			return $this->requestConfiguration->getConfigurationForResource(
+				$this->presenterToResourceMap[$name]
+			)['presenter'];
 		}
 
 		return parent::getPresenterClass($name);
+	}
+
+	private function warmupResourceMap()
+	{
+		foreach ($this->requestConfiguration->getConfiguration()['definitions'] as $resource => $configuration) {
+			$normalizedResourceName = $this->resourceToPresenter($resource);
+			$this->presenterToResourceMap[$normalizedResourceName] = $resource;
+		}
 	}
 
 	private function resourceToPresenter($name)

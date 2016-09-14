@@ -69,8 +69,8 @@ class RequestConfiguration
 
 	public function getConfigurationForResource($resource)
 	{
-		if (isset($this->configuration[$resource])) {
-			return $this->configuration[$resource];
+		if (isset($this->configuration['definitions'][$resource])) {
+			return $this->configuration['definitions'][$resource];
 		}
 
 		return null;
