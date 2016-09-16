@@ -15,7 +15,7 @@ extensions:
 resource:
     definitions:
         default-resource:
-            table: some_table
+            table: default_resource
             actions:
                 default:
                     secure: false

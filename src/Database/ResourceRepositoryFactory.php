@@ -2,6 +2,7 @@
 
 namespace Buri\Resource\Database;
 
+use Nette\Database\Context;
 use Nette\DI\Container;
 
 class ResourceRepositoryFactory
@@ -33,7 +34,7 @@ class ResourceRepositoryFactory
 	{
 		switch ($this->driverName) {
 			case self::NETTE_DATABASE:
-				return new NetteDatabaseRepository($configuration);
+				return new NetteDatabaseRepository($this->context->getByType(Context::class), $configuration['table']);
 		}
 
 		throw new \InvalidArgumentException(

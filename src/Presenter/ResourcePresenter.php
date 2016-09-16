@@ -2,10 +2,12 @@
 
 namespace Buri\Resource\Presenter;
 
+use Buri\Resource\Configuration\IRequestConfigurationAware;
 use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Database\IRepository;
 use Nette\Application;
 use Nette\Application\UI\Presenter;
+use Nette\DI\MissingServiceException;
 
 class ResourcePresenter extends Presenter
 {
@@ -45,6 +47,21 @@ class ResourcePresenter extends Presenter
 		return $files;
 	}
 
+	public function formatLayoutTemplateFiles()
+	{
+		$files = parent::formatLayoutTemplateFiles();
+		$appRoot = $this->context->parameters['appDir'];
+		$layout = $this->layout ? $this->layout : 'layout';
+		$presenter = $this->getName();
+
+		$files[] = "$appRoot/presenters/templates/$presenter/@$layout.latte";
+		$files[] = "$appRoot/presenters/templates/$presenter.@$layout.latte";
+		$files[] = "$appRoot/presenters/templates/@$layout.latte";
+
+		return $files;
+	}
+
+
 	/**
 	 * {@inheritdoc}
 	 * Setup resource configuration based on current request
@@ -65,16 +82,48 @@ class ResourcePresenter extends Presenter
 		$this->template->resources = $resources;
 	}
 
+	public function actionView($id)
+	{
+
+	}
+
+	public function actionUpdate($id)
+	{
+
+	}
+
+	public function actionDelete($id)
+	{
+
+	}
+
 	protected function createComponent($name)
 	{
 		$component = parent::createComponent($name);
 		if (null === $component) {
-			// TODO: create desired component
+			$serviceName = sprintf(
+				'resource.control.%s.%s',
+				lcfirst($this->requestConfiguration->getNormalizedName()),
+				$name
+			);
+			if ($this->context->hasService($serviceName)) {
+				$component = $this->context->getService($serviceName);
+			}
+			if (null === $component) {
+				$fqcn = $this->requestConfiguration->getComponentClass($this->action);
+				$component = $this->context->getByType($fqcn, false);
+				if (null === $component) {
+					$component = new $fqcn($this, $name);
+				}
+			}
+		}
+
+		if ($component instanceof IRequestConfigurationAware) {
+			$component->setRequestConfiguration($this->requestConfiguration);
 		}
 
 		return $component;
 	}
-
 
 	protected function isGrantedOr403($permission)
 	{

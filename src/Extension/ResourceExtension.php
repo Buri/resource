@@ -3,7 +3,9 @@
 namespace Buri\Resource\Extension;
 
 use Buri\Resource\Configuration\RequestConfiguration;
+use Buri\Resource\Controls\ResourceGrid\ResourceGrid;
 use Buri\Resource\Database\ResourceRepositoryFactory;
+use Buri\Resource\Helpers\LatteHelpers;
 use Buri\Resource\Helpers\ResourceHelper;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
@@ -18,9 +20,11 @@ class ResourceExtension extends CompilerExtension
 		'driver' => ResourceRepositoryFactory::NETTE_DATABASE,
 		'defaults' => [
 			'table' => null,
+			'presentation' => 'name',
 			'presenter' => ResourcePresenter::class,
 			'actions' => [
 				'default' => [
+					'component' => ResourceGrid::class,
 					'secure' => true,
 					'paginate' => true,
 					'pageSize' => 20,
@@ -46,16 +50,22 @@ class ResourceExtension extends CompilerExtension
 			$this->name
 		);
 
+		// Define request configuration as a service to be accessible from app
 		$builder->addDefinition($this->prefix('requestConfiguration'))
 			->setClass(RequestConfiguration::class, [$config]);
 
+		// Create repositories for all registered resources
 		$builder->addDefinition($this->prefix('driverFactory'))
 			->setClass(ResourceRepositoryFactory::class, [$config['driver']]);
-
 		foreach ($config['definitions'] as $resource => $configuration) {
 			$builder->addDefinition($this->prefix(ResourceHelper::normalizeResourceName($resource) . '.repository'))
 				->setFactory($this->prefix('@driverFactory::createRepositoryForResource'), [$configuration]);
 		}
+
+//		dd($builder);
+		// Register our helpers to latte
+		$builder->getDefinition('latte.latteFactory')
+			->addSetup('addFilter', [null, LatteHelpers::class . '::register']);
 
 		// Modify presenter factory to look for defined resource
 		$presenterFactory = $builder->getDefinition('application.presenterFactory');

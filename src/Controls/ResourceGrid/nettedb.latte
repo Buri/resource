@@ -1,0 +1,24 @@
+<table>
+    {foreach $resources as $resource}
+    {var $id = $resource->getPrimary()}
+    {if $iterator->first}
+    <thead>
+    <tr>
+        {foreach $resource as $column => $value}
+            <th>{$column|humanize}</th>
+        {/foreach}
+    </tr>
+    </thead>
+    <tbody>
+    {/if}
+    <tr>
+        {foreach $resource as $column => $value}
+            <td>{$control->getValue($resource, $column)}</td>
+        {/foreach}
+        <td><a href="{plink view $id}">View</a></td>
+        <td><a href="{plink update $id}">Update</a></td>
+        <td><a href="{plink delete $id}">Delete</a></td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

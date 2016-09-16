@@ -2,6 +2,8 @@ language: php
 php:
     - '5.6'
     - '7.0'
+addons:
+    mariadb: '10.0'
 install:
     - composer require nette/nette:${NETTE_VERSION}
 env:
@@ -10,4 +12,4 @@ env:
 script:
     - vendor/bin/tester -p php -c tests/php.ini -o console --coverage tests/coverage.xml --coverage-src src tests/
 after_script:
-  - vendor/bin/codacycoverage clover tests/coverage.xml
+    - vendor/bin/codacycoverage clover tests/coverage.xml

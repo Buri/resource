@@ -8,6 +8,7 @@
 </head>
 
 <body>
+	<h1 n:block="title">Resource</h1>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	{include content}

@@ -113,9 +113,29 @@ class RequestConfiguration
 		return $this->action($action)['secure'];
 	}
 
+	/**
+	 * @param $action
+	 * @return string
+	 */
+	public function getComponentClass($action)
+	{
+		return $this->action($action)['component'];
+	}
+
 	public function isPageable($action)
 	{
 		return $this->action($action)['paginate'];
+	}
+
+	public function getPresentationForTable($table)
+	{
+		foreach ($this->configuration['definitions'] as $definition) {
+			if ($table === $definition['table']) {
+				return $definition['presentation'];
+			}
+		}
+
+		return $this->configuration['defaults']['presentation'];
 	}
 
 	/**
