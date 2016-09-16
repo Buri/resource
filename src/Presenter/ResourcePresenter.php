@@ -7,7 +7,6 @@ use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Database\IRepository;
 use Nette\Application;
 use Nette\Application\UI\Presenter;
-use Nette\DI\MissingServiceException;
 
 class ResourcePresenter extends Presenter
 {

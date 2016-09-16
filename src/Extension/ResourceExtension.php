@@ -62,7 +62,6 @@ class ResourceExtension extends CompilerExtension
 				->setFactory($this->prefix('@driverFactory::createRepositoryForResource'), [$configuration]);
 		}
 
-//		dd($builder);
 		// Register our helpers to latte
 		$builder->getDefinition('latte.latteFactory')
 			->addSetup('addFilter', [null, LatteHelpers::class . '::register']);
