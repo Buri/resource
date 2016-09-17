@@ -11,7 +11,13 @@ env:
     - NETTE_VERSION="~2.4.0"
 before_script:
     - sudo apt-get update > /dev/null
-    - sudo apt-get install -y --force-yes apache2 libapache2-mod-php*
+    - sudo apt-get install -y --force-yes apache2 libapache2-mod-fastcgi
+     # enable php-fpm
+    - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+    - sudo a2enmod rewrite actions fastcgi alias
+    - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+    # configre virtual host
     - sudo sed -i -e "s,/var/www,$(pwd)/tests/www-test/www,g" /etc/apache2/sites-available/default
     - sudo sed -i -e "/DocumentRoot/i\ServerName resource-test.local" /etc/apache2/sites-available/default
     - echo "127.0.0.1 resource-test.local" | sudo tee -a /etc/hosts
