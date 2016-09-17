@@ -4,11 +4,11 @@ namespace Buri\Resource\Helpers;
 
 class LatteHelpers
 {
-	public static function register($filter, $value)
+	public static function register()
 	{
+		$args = func_get_args();
+		$filter = array_shift($args);
 		if (method_exists(__CLASS__, $filter)) {
-			$args = func_get_args();
-			array_shift($args);
 			return call_user_func_array([__CLASS__, $filter], $args);
 		}
 	}
