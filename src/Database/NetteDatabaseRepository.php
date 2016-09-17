@@ -2,10 +2,16 @@
 
 namespace Buri\Resource\Database;
 
+use Buri\Resource\Configuration\IRequestConfigurationAware;
+use Buri\Resource\Configuration\RequestConfigurationAwareTrait;
 use Nette\Database\Context;
+use Nette\Database\Table\ActiveRow;
+use Nette\Utils\Paginator;
 
-class NetteDatabaseRepository implements IRepository
+class NetteDatabaseRepository implements IRepository, IRequestConfigurationAware
 {
+	use RequestConfigurationAwareTrait;
+
 	/** @var Context */
 	protected $connection;
 
@@ -28,14 +34,24 @@ class NetteDatabaseRepository implements IRepository
 
 	}
 
+	public function remove($object)
+	{
+		if ($object instanceof ActiveRow) {
+			$object->delete();
+		}
+	}
+
 	public function findAll()
 	{
 		return $this->table()->fetchAll();
 	}
 
-	public function createPager()
+	public function getCurrentPage(Paginator $paginator)
 	{
-		return $this->table()->fetchAll();
+		$paginator->setItemsPerPage($this->requestConfiguration->getItemsPerPage());
+		$paginator->setItemCount($this->table()->count('*'));
+
+		return $this->table()->limit($paginator->getItemsPerPage(), $paginator->getOffset())->fetchAll();
 	}
 
 	protected function table()

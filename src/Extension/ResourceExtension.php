@@ -9,6 +9,7 @@ use Buri\Resource\Helpers\LatteHelpers;
 use Buri\Resource\Helpers\ResourceHelper;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
+use IPub\VisualPaginator\DI\VisualPaginatorExtension;
 use Nette\Bridges\ApplicationDI\PresenterFactoryCallback;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
@@ -75,6 +76,13 @@ class ResourceExtension extends CompilerExtension
 			)])
 			->addSetup('setRequestConfiguration', [$this->prefix('@requestConfiguration')]);
 	}
+
+	public function setCompiler(Compiler $compiler, $name)
+	{
+		$compiler->addExtension('visualPaginator', new VisualPaginatorExtension());
+		return parent::setCompiler($compiler, $name);
+	}
+
 
 	private function getNormalizedConfig()
 	{

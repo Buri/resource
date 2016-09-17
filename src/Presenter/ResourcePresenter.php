@@ -7,6 +7,7 @@ use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Database\IRepository;
 use Nette\Application;
 use Nette\Application\UI\Presenter;
+use IPub\VisualPaginator\Components\Control as VisualPaginatorControl;
 
 class ResourcePresenter extends Presenter
 {
@@ -76,12 +77,13 @@ class ResourcePresenter extends Presenter
 		$this->isGrantedOr403(self::ACTION_INDEX);
 
 		$resources = $this->requestConfiguration->isPageable(self::ACTION_INDEX) ?
-			$this->repository->createPager() : $this->repository->findAll();
+			$this->repository->getCurrentPage($this['visualPaginator']->getPaginator()) : $this->repository->findAll();
 
 		$this->template->resources = $resources;
+		$this->template->requestConfiguration = $this->requestConfiguration;
 	}
 
-	public function actionView($id)
+	public function actionShow($id)
 	{
 
 	}
@@ -123,6 +125,15 @@ class ResourcePresenter extends Presenter
 
 		return $component;
 	}
+
+	protected function createComponentVisualPaginator($name) {
+		// Init visual paginator
+		$control = new VisualPaginatorControl('default.latte', $this, $name);
+		$control->disableAjax();
+
+		return $control;
+	}
+
 
 	protected function isGrantedOr403($permission)
 	{

@@ -1,4 +1,9 @@
 {block content}
-    Default index view
+    {if $requestConfiguration->isPageable($presenter->action)}
+        {control visualPaginator}
+    {/if}
     {control indexGrid $resources}
+    {if $requestConfiguration->isPageable($presenter->action)}
+        {control visualPaginator}
+    {/if}
 {/block}

@@ -4,12 +4,11 @@ namespace Buri\Resource\Configuration;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
-use Nette\Http\IRequest;
 
 class RequestConfiguration
 {
 	/**
-	 * @var IRequest
+	 * @var Request
 	 */
 	protected $request;
 	/**
@@ -48,6 +47,8 @@ class RequestConfiguration
 				$request->getPresenterName()
 			));
 		}
+
+		$this->request = $request;
 		$this->initialized = true;
 	}
 
@@ -127,6 +128,11 @@ class RequestConfiguration
 		return $this->action($action)['paginate'];
 	}
 
+	public function getItemsPerPage()
+	{
+		return $this->action('default')['pageSize'];
+	}
+
 	public function getPresentationForTable($table)
 	{
 		foreach ($this->configuration['definitions'] as $definition) {
@@ -136,6 +142,14 @@ class RequestConfiguration
 		}
 
 		return $this->configuration['defaults']['presentation'];
+	}
+
+	/**
+	 * @return Request
+	 */
+	public function getRequest()
+	{
+		return $this->request;
 	}
 
 	/**

@@ -13,9 +13,9 @@
     {/if}
     <tr>
         {foreach $resource as $column => $value}
-            <td>{$control->getValue($resource, $column)}</td>
+            <td>{$control->getValue($resource, $column)|truncate:100}</td>
         {/foreach}
-        <td><a href="{plink view $id}">View</a></td>
+        <td><a href="{plink show $id}">Show</a></td>
         <td><a href="{plink update $id}">Update</a></td>
         <td><a href="{plink delete $id}">Delete</a></td>
     </tr>

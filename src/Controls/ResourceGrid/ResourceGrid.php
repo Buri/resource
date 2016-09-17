@@ -6,7 +6,7 @@ use Buri\Resource\Configuration\IRequestConfigurationAware;
 use Buri\Resource\Configuration\RequestConfigurationAwareTrait;
 use Nette\Application\UI\Control;
 use Nette\ArgumentOutOfRangeException;
-use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\IRow;
 
 class ResourceGrid extends Control implements IRequestConfigurationAware
 {
@@ -26,7 +26,7 @@ class ResourceGrid extends Control implements IRequestConfigurationAware
 		}
 
 		if (is_object($resource)) {
-			if ($resource instanceof ActiveRow) {
+			if ($resource instanceof IRow) {
 				return $this->getActiveRowProperty($resource, $property);
 			}
 			return $resource->{$property};
@@ -38,14 +38,14 @@ class ResourceGrid extends Control implements IRequestConfigurationAware
 
 	protected function getTemplateForResources($resource)
 	{
-		if ($resource instanceof ActiveRow) {
+		if ($resource instanceof IRow) {
 			return __DIR__ . '/nettedb.latte';
 		}
 
 		throw new ArgumentOutOfRangeException('Unknown resource driver');
 	}
 
-	protected function getActiveRowProperty(ActiveRow $row, $property)
+	protected function getActiveRowProperty(IRow $row, $property)
 	{
 		$fkIdPos = strpos($property, '_id');
 		if (false !== $fkIdPos) {
