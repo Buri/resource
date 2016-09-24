@@ -18,7 +18,7 @@ final class DefaultResourceTranslator implements ITranslator
 		$this->messages = $messages;
 	}
 
-	function translate($message, $count = NULL)
+	public function translate($message, $count = null)
 	{
 		if (isset($this->messages[$message])) {
 			return $this->messages[$message];

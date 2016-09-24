@@ -12,7 +12,6 @@ use Buri\Resource\Localization\TranslationFilter;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
 use IPub\VisualPaginator\DI\VisualPaginatorExtension;
-use Latte\Runtime\FilterInfo;
 use Nette\Bridges\ApplicationDI\PresenterFactoryCallback;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
@@ -94,13 +93,6 @@ class ResourceExtension extends CompilerExtension
 			->addSetup('addFilter', ['translate', $this->prefix('@translationFilter::createTranslator')]);
 	}
 
-	public function setCompiler(Compiler $compiler, $name)
-	{
-		$compiler->addExtension('visualPaginator', new VisualPaginatorExtension());
-		return parent::setCompiler($compiler, $name);
-	}
-
-
 	private function getNormalizedConfig()
 	{
 		$config = $this->getConfig($this->defaults);
@@ -109,5 +101,11 @@ class ResourceExtension extends CompilerExtension
 		}
 
 		return $config;
+	}
+
+	public function setCompiler(Compiler $compiler, $name)
+	{
+		$compiler->addExtension('visualPaginator', new VisualPaginatorExtension());
+		return parent::setCompiler($compiler, $name);
 	}
 }

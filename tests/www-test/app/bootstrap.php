@@ -16,7 +16,14 @@ $configurator->createRobotLoader()
 	->register();
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
-$configurator->addConfig(__DIR__ . '/config/config.local.neon');
+$travisConfig = __DIR__ . '/config/config.travis.neon';
+$localConfig = __DIR__ . '/config/config.local.neon';
+if (file_exists($localConfig)) {
+	$configurator->addConfig($localConfig);
+} elseif (file_exists($travisConfig)) {
+	$configurator->addConfig($travisConfig);
+}
+
 
 $container = $configurator->createContainer();
 
