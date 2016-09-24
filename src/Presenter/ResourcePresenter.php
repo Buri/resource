@@ -5,21 +5,18 @@ namespace Buri\Resource\Presenter;
 use Buri\Resource\Configuration\IRequestConfigurationAware;
 use Buri\Resource\Configuration\RequestConfiguration;
 use Buri\Resource\Database\IRepository;
+use IPub\VisualPaginator\Components\Control as VisualPaginatorControl;
 use Nette\Application;
 use Nette\Application\UI\Presenter;
-use IPub\VisualPaginator\Components\Control as VisualPaginatorControl;
 
 class ResourcePresenter extends Presenter
 {
 	const ACTION_INDEX = 'default';
-
+	public $onPreCreate;
 	/** @var  RequestConfiguration */
 	protected $requestConfiguration;
-
 	/** @var IRepository */
 	protected $repository;
-
-	public $onPreCreate;
 
 	/**
 	 * @param RequestConfiguration $requestConfiguration
@@ -83,6 +80,16 @@ class ResourcePresenter extends Presenter
 		$this->template->requestConfiguration = $this->requestConfiguration;
 	}
 
+	protected function isGrantedOr403($permission)
+	{
+		if ($this->requestConfiguration->isActionSecured($permission)) {
+			$user = $this->getUser();
+			if (!$user->isAllowed($this->requestConfiguration->getNormalizedName(), $permission)) {
+				throw new Application\ForbiddenRequestException();
+			}
+		}
+	}
+
 	public function actionShow($id)
 	{
 
@@ -132,16 +139,5 @@ class ResourcePresenter extends Presenter
 		$control->disableAjax();
 
 		return $control;
-	}
-
-
-	protected function isGrantedOr403($permission)
-	{
-		if ($this->requestConfiguration->isActionSecured($permission)) {
-			$user = $this->getUser();
-			if (!$user->isAllowed($this->requestConfiguration->getNormalizedName(), $permission)) {
-				throw new Application\ForbiddenRequestException();
-			}
-		}
 	}
 }

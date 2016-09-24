@@ -3,8 +3,8 @@
 namespace Buri\Resource\Presenter;
 
 use Buri\Resource\Configuration\RequestConfiguration;
-use Nette\Application\PresenterFactory as BasePresenterFactory;
 use Buri\Resource\Helpers\ResourceHelper;
+use Nette\Application\PresenterFactory as BasePresenterFactory;
 
 class PresenterFactory extends BasePresenterFactory
 {
@@ -23,6 +23,15 @@ class PresenterFactory extends BasePresenterFactory
 		$this->warmUpResourceMap();
 	}
 
+	private function warmUpResourceMap()
+	{
+		$resourceNames = array_keys($this->requestConfiguration->getConfiguration()['definitions']);
+		foreach ($resourceNames as $resource) {
+			$normalizedResourceName = ResourceHelper::normalizeResourceName($resource);
+			$this->presenterToResourceMap[$normalizedResourceName] = $resource;
+		}
+	}
+
 	public function createPresenter($name)
 	{
 		$presenter = parent::createPresenter($name);
@@ -37,7 +46,6 @@ class PresenterFactory extends BasePresenterFactory
 		return $presenter;
 	}
 
-
 	public function getPresenterClass(& $name)
 	{
 		if (isset($this->presenterToResourceMap[$name])) {
@@ -47,15 +55,6 @@ class PresenterFactory extends BasePresenterFactory
 		}
 
 		return parent::getPresenterClass($name);
-	}
-
-	private function warmUpResourceMap()
-	{
-		$resourceNames = array_keys($this->requestConfiguration->getConfiguration()['definitions']);
-		foreach ($resourceNames as $resource) {
-			$normalizedResourceName = ResourceHelper::normalizeResourceName($resource);
-			$this->presenterToResourceMap[$normalizedResourceName] = $resource;
-		}
 	}
 
 }

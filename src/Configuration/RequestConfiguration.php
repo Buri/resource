@@ -115,6 +115,33 @@ class RequestConfiguration
 	}
 
 	/**
+	 * @param $name
+	 * @return array
+	 */
+	protected function action($name)
+	{
+		$this->assertInitialized();
+		if (isset($this->currentConfiguration['actions'][$name])) {
+			return $this->currentConfiguration['actions'][$name];
+		}
+
+		return [];
+	}
+
+	protected function assertInitialized()
+	{
+		if (!$this->initialized) {
+			throw new ResourceNotInitializedException(
+				sprintf(
+					'Called function "%s::%s" before request was handled',
+					get_called_class(),
+					debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
+				)
+			);
+		}
+	}
+
+	/**
 	 * @param $action
 	 * @return string
 	 */
@@ -150,32 +177,5 @@ class RequestConfiguration
 	public function getRequest()
 	{
 		return $this->request;
-	}
-
-	/**
-	 * @param $name
-	 * @return array
-	 */
-	protected function action($name)
-	{
-		$this->assertInitialized();
-		if (isset($this->currentConfiguration['actions'][$name])) {
-			return $this->currentConfiguration['actions'][$name];
-		}
-
-		return [];
-	}
-
-	protected function assertInitialized()
-	{
-		if (!$this->initialized) {
-			throw new ResourceNotInitializedException(
-				sprintf(
-					'Called function "%s::%s" before request was handled',
-					get_called_class(),
-					debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']
-				)
-			);
-		}
 	}
 }

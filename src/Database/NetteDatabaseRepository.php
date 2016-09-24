@@ -46,17 +46,17 @@ class NetteDatabaseRepository implements IRepository, IRequestConfigurationAware
 		return $this->table()->fetchAll();
 	}
 
+	protected function table()
+	{
+		return $this->connection->table($this->tableName);
+	}
+
 	public function getCurrentPage(Paginator $paginator)
 	{
 		$paginator->setItemsPerPage($this->requestConfiguration->getItemsPerPage());
 		$paginator->setItemCount($this->table()->count('*'));
 
 		return $this->table()->limit($paginator->getItemsPerPage(), $paginator->getOffset())->fetchAll();
-	}
-
-	protected function table()
-	{
-		return $this->connection->table($this->tableName);
 	}
 
 }
