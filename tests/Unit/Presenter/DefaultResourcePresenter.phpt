@@ -12,12 +12,15 @@ use Tester\Assert;
 /** @var Container $container */
 $container = require_once __DIR__ . '/../bootstrap.php';
 
-class DefaultResourcePresenter extends BasePresenterTest
+final class DefaultResourcePresenter extends BasePresenterTest
 {
 	public function testDefaultAction()
 	{
 		$this->presenterAction(new Request($this->getPresenterName(), 'GET', ['action' => 'default']));
-		dd((string)$this->response->getSource());
+//		d((string)$this->response->getSource());
+//		d($this->dom->find('title'));
+//		Assert::true(false);
+//		$this->dom->find();
 	}
 }
 

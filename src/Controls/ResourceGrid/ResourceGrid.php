@@ -4,6 +4,7 @@ namespace Buri\Resource\Controls\ResourceGrid;
 
 use Buri\Resource\Configuration\IRequestConfigurationAware;
 use Buri\Resource\Configuration\RequestConfigurationAwareTrait;
+use Buri\Resource\Helpers\ResourceHelper;
 use Nette\Application\UI\Control;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Database\Table\IRow;
@@ -34,6 +35,26 @@ class ResourceGrid extends Control implements IRequestConfigurationAware
 		}
 
 		throw new \TypeError();
+	}
+
+	/**
+	 * @param $property
+	 * @return bool
+	 */
+	public function isFK($property)
+	{
+		return false !== strpos($property, '_id');
+	}
+
+	public function getPresenterForProperty($property)
+	{
+		$fkIdPos = strpos($property, '_id');
+		if (false !== $fkIdPos) {
+			$property = substr($property, 0, $fkIdPos);
+			return ResourceHelper::normalizeResourceName($property);
+		}
+
+		throw new \LogicException("Cannot convert to presenter name");
 	}
 
 	protected function getTemplateForResources($resource)
