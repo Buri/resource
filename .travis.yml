@@ -24,7 +24,7 @@ before_script:
     - echo "127.0.0.1 resource-test.local" | sudo tee -a /etc/hosts
     - sudo service apache2 restart
 script:
-    - vendor/bin/tester -p php -c tests/php.ini -o console --coverage tests/coverage.xml --coverage-src src tests/
+    - vendor/bin/tester -p php -s -c tests/php.ini -o console --coverage tests/coverage.xml --coverage-src src tests/
 after_script:
     - vendor/bin/codacycoverage clover tests/coverage.xml
 cache:
