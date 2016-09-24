@@ -7,13 +7,17 @@ use Buri\Resource\Controls\ResourceGrid\ResourceGrid;
 use Buri\Resource\Database\ResourceRepositoryFactory;
 use Buri\Resource\Helpers\LatteHelpers;
 use Buri\Resource\Helpers\ResourceHelper;
+use Buri\Resource\Localization\DefaultResourceTranslator;
+use Buri\Resource\Localization\TranslationFilter;
 use Buri\Resource\Presenter\PresenterFactory;
 use Buri\Resource\Presenter\ResourcePresenter;
 use IPub\VisualPaginator\DI\VisualPaginatorExtension;
+use Latte\Runtime\FilterInfo;
 use Nette\Bridges\ApplicationDI\PresenterFactoryCallback;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Statement;
+use Nette\Localization\ITranslator;
 
 class ResourceExtension extends CompilerExtension
 {
@@ -37,6 +41,7 @@ class ResourceExtension extends CompilerExtension
 			],
 		],
 		'definitions' => [],
+		'translations' => [],
 	];
 
 	public function loadConfiguration()
@@ -75,6 +80,18 @@ class ResourceExtension extends CompilerExtension
 				PresenterFactoryCallback::class, $presenterFactory->getFactory()->arguments[0]->arguments
 			)])
 			->addSetup('setRequestConfiguration', [$this->prefix('@requestConfiguration')]);
+
+		// Register default translator if no translator is present
+		/** @var ITranslator $translator */
+		$translator = $builder->getByType(ITranslator::class);
+		if (null === $translator) {
+			$translator = $builder->addDefinition($this->prefix('translator'))
+				->setClass(DefaultResourceTranslator::class, [$this->getNormalizedConfig()['translations']]);
+		}
+		$builder->addDefinition($this->prefix('translationFilter'))
+			->setClass(TranslationFilter::class, [$translator]);
+		$builder->getDefinition('latte.latteFactory')
+			->addSetup('addFilter', ['translate', $this->prefix('@translationFilter::createTranslator')]);
 	}
 
 	public function setCompiler(Compiler $compiler, $name)
